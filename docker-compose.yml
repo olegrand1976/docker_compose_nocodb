@@ -14,16 +14,11 @@ services:
       - MYSQL_DATABASE:"root_db"
       - MYSQL_USER:"noco"
       - MYSQL_PASSWORD:"password"
-    healthcheck:
-      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
-      timeout: 20s
-      retries: 10
 
   nocodb:
-    depends_on:
-      - root_db
-#          condition: service_healthy
-    image: nocodb/nocodb:0.83.8
+#    depends_on:
+#      - root_db
+    image: nocodb/nocodb:0.84.1
     ports:
       - "8080:8080"
     volumes:
@@ -31,17 +26,13 @@ services:
     restart: always
     environment:
       - NC_DB:"mysql2://root_db:3306?u=noco&p=password&d=root_db"
-
-  phpmyadmin:
-    image: phpmyadmin:5.1.1-fpm
+  
+  adminer:
+    image: adminer:4.8.1
     restart: always
     ports:
-      - "8081:80"
-    environment:
-      - PMA_ARBITRARY:1
-      - MYSQL_ROOT_PASSWORD:"root"
-      - MYSQL_USER:"olivier"
-      - MYSQL_PASSWORD:"Smicer22"
+      - 8081:8080
+
 volumes:
   db_data: {}
   db_noco: {}
